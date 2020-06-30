@@ -22,10 +22,16 @@ int msgpersist(int msqid, int cmd);
 #define __NR_send_rpc      (LIBOS_SYSCALL_BASE + 3)
 #define __NR_recv_rpc      (LIBOS_SYSCALL_BASE + 4)
 
+#define __NR_unsecure_malloc (LIBOS_SYSCALL_BASE + 5)
+#define __NR_unsecure_free (LIBOS_SYSCALL_BASE + 6)
+
 int benchmark_rpc(pid_t pid, int times, const void* buf, size_t size);
 
 size_t send_rpc(pid_t pid, const void* buf, size_t size);
 size_t recv_rpc(pid_t* pid, void* buf, size_t size);
+
+void* unsecure_malloc(size_t size);
+void unsecure_free(void* size);
 
 struct sigcp {
     int si_session;

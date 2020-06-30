@@ -385,6 +385,9 @@ struct parser_table {
         [__NR_benchmark_rpc] = {.slow = 1, .parser = {NULL}},
         [__NR_send_rpc]      = {.slow = 1, .parser = {NULL}},
         [__NR_recv_rpc]      = {.slow = 1, .parser = {NULL}},
+
+        [__NR_unsecure_malloc] = {.slow = 1, .parser = {NULL}},
+        [__NR_unsecure_free]   = {.slow = 1, .parser = {NULL}},
 };
 
 #define S(sig) #sig

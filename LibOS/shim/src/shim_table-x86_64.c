@@ -332,4 +332,7 @@ shim_fp shim_table[LIBOS_SYSCALL_BOUND] = {
     (shim_fp)__shim_benchmark_rpc,
     (shim_fp)__shim_send_rpc,
     (shim_fp)__shim_recv_rpc,
+
+    (shim_fp)__shim_unsecure_malloc,
+    (shim_fp)__shim_unsecure_free,
 };

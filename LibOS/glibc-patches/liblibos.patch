@@ -112,16 +112,16 @@ index 0000000..8785629
 +{
 +	return INLINE_SYSCALL (recv_rpc, 3, pid, buf, size);
 +}
-
++#endif
 +#ifdef __NR_unsecure_malloc
 +void* unsecure_malloc (size_t size)
 +{
 +	return INLINE_SYSCALL (unsecure_malloc, 1, size);
 +}
-
++#endif
 +#ifdef __NR_unsecure_free
-+void unsecure_free (void *ptr)
++int unsecure_free (void *ptr)
 +{
-+	INLINE_SYSCALL (unsecure_free, 1, ptr);
++	return INLINE_SYSCALL (unsecure_free, 1, ptr);
 +}
 +#endif

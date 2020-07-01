@@ -13,7 +13,7 @@
 #include <shim_ipc.h>
 #include <shim_table.h>
 #include <shim_unistd.h>
-#include <shim_utils>
+#include <shim_utils.h>
 
 int get_pid_port(IDTYPE pid, IDTYPE* dest, struct shim_ipc_port** port);
 
@@ -56,8 +56,10 @@ void* shim_do_unsecure_malloc(size_t size) {
 }
 
 //TODO move to separate file
-void* shim_do_unsecure_free(void* ptr) {
+int shim_do_unsecure_free(void* ptr) {
 
     // TODO use unsecure free?
     free(ptr);
+
+    return 0;
 }

@@ -5,6 +5,9 @@
 #include "duckdb.h"
 #include "stdio.h"
 #include <iostream>
+extern "C" {
+    #include "shim_unistd.h"
+}
 
 void test_duckdb() {
   printf("Doing duckdb: \n");
@@ -48,10 +51,10 @@ int main() {
 
   printf("Hello secure world, lets do some duckdb!\n");
 
-  test_duckdb();
+//  test_duckdb();
 
-  auto test = (char*)malloc(64);
-
-  free(test);
+  auto buf = (char*)unsecure_malloc(100);
+  printf("buf[99] (should be S): %c\n", buf[99]);
+  unsecure_free(buf);
   return 0;
 }

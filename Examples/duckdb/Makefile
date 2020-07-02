@@ -18,7 +18,6 @@
 
 # Relative path to Graphene root
 GRAPHENEDIR = ../..
-SGX_SIGNER_KEY ?= $(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/enclave-key.pem
 
 SRCDIR = src
 COMMIT = 5.0.5
@@ -31,23 +30,20 @@ GRAPHENEDEBUG = none
 endif
 
 .PHONY: all
-all: secure_main secure_main.manifest pal_loader
+all:  benchmark_runner benchmark_runner.manifest pal_loader
 ifeq ($(SGX),1)
-all: secure_main.manifest.sgx
+all: benchmark_runner.manifest.sgx
 endif
 
-include ../../Scripts/Makefile.configs
-
-################################ REDIS MANIFEST ###############################
+################################ MANIFEST ####################################
 
 # The template file contains almost all necessary information to run Redis
 # under Graphene / Graphene-SGX. We create redis.manifest (to be run under
 # non-SGX Graphene) by simply replacing variables in the template file via sed.
 
-secure_main.manifest: secure_main.manifest.template
+benchmark_runner.manifest: benchmark_runner.manifest.template
 	sed -e 's|$$(GRAPHENEDIR)|'"$(GRAPHENEDIR)"'|g' \
 		-e 's|$$(GRAPHENEDEBUG)|'"$(GRAPHENEDEBUG)"'|g' \
-		-e 's|$$(ARCH_LIBDIR)|'"$(ARCH_LIBDIR)"'|g' \
 		$< > $@
 
 # Manifest for Graphene-SGX requires special "pal-sgx-sign" procedure. This
@@ -59,25 +55,25 @@ secure_main.manifest: secure_main.manifest.template
 # SGX hardware ABI, in particular EINIT instruction). The "pal-sgx-get-token"
 # script generates these objects and puts them in files .token and .sig
 # respectively. Note that filenames must be the same as the executable/manifest
-# name (i.e., "secure_main").
+# name (i.e., "benchmark_runner").
 
-secure_main.manifest.sgx: secure_main.manifest
+benchmark_runner.manifest.sgx: benchmark_runner.manifest
 	$(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/pal-sgx-sign \
 		-libpal $(GRAPHENEDIR)/Runtime/libpal-Linux-SGX.so \
-		-key $(SGX_SIGNER_KEY) \
+		-key $(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/enclave-key.pem \
 		-manifest $< -output $@ \
-		-exec secure_main
+		-exec benchmark_runner
 	$(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/pal-sgx-get-token \
-		-output secure_main.token -sig secure_main.sig
+		-output benchmark_runner.token -sig benchmark_runner.sig
 
 ########################### COPIES OF EXECUTABLES #############################
 
-# Redis build process creates the final executable as src/secure_main. For
+# Redis build process creates the final executable as src/benchmark_runner. For
 # simplicity, copy it into our root directory.
 # Also, create a link to pal_loader for simplicity.
 
-secure_main:
-	g++ -o secure_main secure_main.cpp -I/home/sam/Documents/duckdb/src/include -L/home/sam/Documents/duckdb/build/release/src/ -lduckdb -I$(GRAPHENEDIR)/LibOS/shim/include -L$(GRAPHENEDIR)/LibOS/glibc-build/libos -llibos
+benchmark_runner:
+	ln -s /home/sam/Documents/duckdb/build/release/benchmark/benchmark_runner $@
 
 pal_loader:
 	ln -s $(GRAPHENEDIR)/Runtime/pal_loader $@
@@ -85,18 +81,18 @@ pal_loader:
 ############################## RUNNING TESTS ##################################
 .PHONY: start-native-server
 start-native-server: all
-	./secure_main --save '' --protected-mode no
+	./benchmark_runner --save '' --protected-mode no
 
 .PHONY: start-graphene-server
 start-graphene-server: all
-	./pal_loader secure_main --save '' --protected-mode no
+	./pal_loader benchmark_runner --save '' --protected-mode no
 
 ################################## CLEANUP ####################################
 
 .PHONY: clean
 clean:
-	$(RM) *.token *.sig *.manifest.sgx *.manifest pal_loader secure_main *.rdb
+	$(RM) *.token *.sig *.manifest.sgx *.manifest pal_loader benchmark_runner *.rdb
 
 .PHONY: distclean
 distclean: clean
-	$(RM) -r $(SRCDIR) redis.tar.gz
+	$(RM) -r $(SRCDIR)

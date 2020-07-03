@@ -20,6 +20,16 @@
 #include <asm/fcntl.h>
 #include <asm/mman.h>
 
+#define UNUSED(x) (void)(x)
+void* _DkUntrustedMalloc(size_t size) {
+    UNUSED(size);
+    return NULL;
+}
+
+void _DkUntrustedFree(void* ptr) {
+    UNUSED(ptr);
+}
+
 bool _DkCheckMemoryMappable(const void* addr, size_t size) {
     return (addr < DATA_END && addr + size > TEXT_START);
 }

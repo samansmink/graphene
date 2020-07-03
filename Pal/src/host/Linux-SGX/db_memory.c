@@ -18,6 +18,7 @@
 #include "pal_linux.h"
 #include "pal_linux_defs.h"
 #include "pal_security.h"
+#include "pal_host.h"
 
 extern struct atomic_int g_allocated_pages;
 extern size_t g_page_size;
@@ -34,6 +35,15 @@ bool _DkCheckMemoryMappable(const void* addr, size_t size) {
     return false;
 }
 
+void* _DkUntrustedMalloc(size_t size) {
+    return malloc_untrusted(size);
+}
+
+void _DkUntrustedFree(void* ptr) {
+    free_untrusted(ptr);
+}
+
+// pal alloc call used to do malloc in libOS
 int _DkVirtualMemoryAlloc(void** paddr, uint64_t size, int alloc_type, int prot) {
     __UNUSED(prot);
 

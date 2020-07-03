@@ -24,7 +24,8 @@ typedef spinlock_t PAL_LOCK;
 #define _DkInternalUnlock spinlock_unlock
 #define _DkInternalIsLocked spinlock_is_locked
 
-void * malloc_untrusted (int size);
+// To be included into unsecure malloc PAL API call
+void* malloc_untrusted (int size);
 void free_untrusted (void * mem);
 
 #include <list.h>

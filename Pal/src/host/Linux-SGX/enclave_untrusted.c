@@ -46,6 +46,7 @@ void init_untrusted_slab_mgr(void) {
         INIT_FAIL(PAL_ERROR_NOMEM, "cannot initialize slab manager");
 }
 
+// Untrusted malloc, to be exposed through PAL api to LibOS
 void* malloc_untrusted(int size) {
     return slab_alloc(untrusted_slabmgr, size);
 }

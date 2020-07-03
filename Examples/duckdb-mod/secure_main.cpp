@@ -5,6 +5,8 @@
 #include "duckdb.h"
 #include "stdio.h"
 #include <iostream>
+
+// Used to envoke shim syscalls to do malloc outside SGX
 extern "C" {
     #include "shim_unistd.h"
 }
@@ -54,7 +56,13 @@ int main() {
 //  test_duckdb();
 
   auto buf = (char*)unsecure_malloc(100);
-  printf("buf[99] (should be S): %c\n", buf[99]);
+  printf("buf[99] (should be X): %c\n", buf[99]);
+
+  auto buf_sec = (char*)malloc(100);
+  printf("buf    : %p\n", buf);
+  printf("buf_sec: %p\n", buf_sec);
+
   unsecure_free(buf);
+  unsecure_free(buf_sec);
   return 0;
 }

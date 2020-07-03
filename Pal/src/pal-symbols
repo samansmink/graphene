@@ -1,6 +1,8 @@
 DkVirtualMemoryAlloc
 DkVirtualMemoryFree
 DkVirtualMemoryProtect
+DkUntrustedMalloc
+DkUntrustedFree
 DkThreadCreate
 DkThreadDelayExecution
 DkThreadYieldExecution

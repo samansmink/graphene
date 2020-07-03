@@ -14,6 +14,7 @@
 #include <shim_table.h>
 #include <shim_unistd.h>
 #include <shim_utils.h>
+#include <pal.h>
 
 int get_pid_port(IDTYPE pid, IDTYPE* dest, struct shim_ipc_port** port);
 
@@ -48,9 +49,11 @@ size_t shim_do_recv_rpc(pid_t* pid, void* buf, size_t size) {
 
 //TODO move to separate file
 void* shim_do_unsecure_malloc(size_t size) {
-    void* ptr = malloc(size);
+    void* ptr = DkUntrustedMalloc(size);
 
-    memset(ptr, 'S', size);
+    if (ptr) {
+        memset(ptr, 'X', size);
+    }
 
     return ptr;
 }
@@ -58,8 +61,7 @@ void* shim_do_unsecure_malloc(size_t size) {
 //TODO move to separate file
 int shim_do_unsecure_free(void* ptr) {
 
-    // TODO use unsecure free?
-    free(ptr);
+    DkUntrustedFree(ptr);
 
     return 0;
 }

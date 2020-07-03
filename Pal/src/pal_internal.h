@@ -262,6 +262,8 @@ int _DkEventClear (PAL_HANDLE event);
 int _DkVirtualMemoryAlloc (void ** paddr, uint64_t size, int alloc_type, int prot);
 int _DkVirtualMemoryFree (void * addr, uint64_t size);
 int _DkVirtualMemoryProtect (void * addr, uint64_t size, int prot);
+void* _DkUntrustedMalloc(size_t size);
+void _DkUntrustedFree(void* ptr);
 
 /* DkObject calls */
 int _DkObjectReference (PAL_HANDLE objectHandle);

@@ -14,6 +14,22 @@
 #include "pal_error.h"
 #include "pal_internal.h"
 
+PAL_PTR DkUntrustedMalloc(PAL_NUM size) {
+    ENTER_PAL_CALL(DkUntrustedFree);
+
+    PAL_PTR ptr = (PAL_PTR)_DkUntrustedMalloc(size);
+
+    LEAVE_PAL_CALL_RETURN(ptr);
+}
+
+void DkUntrustedFree(PAL_PTR ptr) {
+    ENTER_PAL_CALL(DkUntrustedFree);
+
+    _DkUntrustedFree(ptr);
+
+    LEAVE_PAL_CALL();
+}
+
 PAL_PTR DkVirtualMemoryAlloc(PAL_PTR addr, PAL_NUM size, PAL_FLG alloc_type, PAL_FLG prot) {
     ENTER_PAL_CALL(DkVirtualMemoryAlloc);
     void* map_addr = (void*)addr;

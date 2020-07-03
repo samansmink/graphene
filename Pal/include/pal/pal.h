@@ -191,6 +191,12 @@ enum PAL_PROT {
 };
 
 
+/*
+ * Super hacky untrusted malloc calls to allow the libOS to request unsecure memory
+ */
+PAL_PTR DkUntrustedMalloc(PAL_NUM size);
+void DkUntrustedFree(PAL_PTR ptr);
+
 /*!
  * \brief Allocate virtual memory for the library OS.
  *

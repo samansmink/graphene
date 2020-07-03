@@ -120,6 +120,7 @@ sgx.trusted_files.libc = file:$(GRAPHENEDIR)/Runtime/libc.so.6
 sgx.trusted_files.libm = file:$(GRAPHENEDIR)/Runtime/libm.so.6
 # sgx.trusted_files.libdl = file:$(GRAPHENEDIR)/Runtime/libdl.so.2
 # sgx.trusted_files.librt = file:$(GRAPHENEDIR)/Runtime/librt.so.1
+sgx.trusted_files.libos = file:$(GRAPHENEDIR)/Runtime/liblibos.so.1
 sgx.trusted_files.libpthread = file:$(GRAPHENEDIR)/Runtime/libpthread.so.0
 sgx.trusted_files.duck_db = file:/usr/lib/libduckdb.so
 sgx.trusted_files.libgcc = file:/lib/x86_64-linux-gnu/libgcc_s.so.1

@@ -17,7 +17,7 @@ extern "C" {
 }
 // Used to run a baseline experiment
 //#define unsecure_malloc(size) 0
-//#define unsecure_free()(size) 0
+//#define unsecure_free(size) 0
 
 
 #define TOTAL_BUFSIZE 1024000000 * 2
@@ -107,16 +107,18 @@ int main() {
         auto buf     = (char*)unsecure_malloc(size);
         auto buf_sec = (char*)malloc(size);
 
-        printf("unsecure ");
-        if (buf)
+
+        if (buf) {
+            printf("unsecure ");
             run_benchmark(buf, size);
-        printf("\n");
+            printf("\n");
+        }
 
-        printf("secure ");
-        if (buf_sec)
+        if (buf_sec) {
+            printf("secure ");
             run_benchmark(buf_sec, size);
-        printf("\n");
-
+            printf("\n");
+        }
         unsecure_free(buf);
         unsecure_free(buf_sec);
 

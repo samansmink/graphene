@@ -77,7 +77,7 @@ secure_main.manifest.sgx: secure_main.manifest
 # Also, create a link to pal_loader for simplicity.
 
 secure_main:
-	g++ -o secure_main secure_main.cpp -I/home/sam/Documents/duckdb/src/include -L/home/sam/Documents/duckdb/build/release/src/ -lduckdb -I$(GRAPHENEDIR)/LibOS/shim/include -L$(GRAPHENEDIR)/LibOS/glibc-build/libos -llibos
+	g++ -o secure_main secure_main.cpp -I/home/sam/Documents/duckdb/src/include -L/home/sam/Documents/duckdb/build/release/src/ -lduckdb -O3 -I$(GRAPHENEDIR)/LibOS/shim/include -L$(GRAPHENEDIR)/LibOS/glibc-build/libos -llibos
 
 pal_loader:
 	ln -s $(GRAPHENEDIR)/Runtime/pal_loader $@

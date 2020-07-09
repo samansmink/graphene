@@ -1,3 +1,4 @@
+
 # Build Redis as follows:
 #
 # - make               -- create non-SGX no-debug-log manifest
@@ -18,6 +19,7 @@
 
 # Relative path to Graphene root
 GRAPHENEDIR = ../..
+SGX_SIGNER_KEY ?= $(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/enclave-key.pem
 
 SRCDIR = src
 COMMIT = 5.0.5
@@ -30,12 +32,11 @@ GRAPHENEDEBUG = none
 endif
 
 .PHONY: all
-all:  benchmark_runner benchmark_runner.manifest pal_loader
-ifeq ($(SGX),1)
-all: benchmark_runner.manifest.sgx
-endif
+all: benchmark_runner benchmark_runner.manifest pal_loader benchmark_runner.manifest.sgx
 
-################################ MANIFEST ####################################
+include ../../Scripts/Makefile.configs
+
+################################ REDIS MANIFEST ###############################
 
 # The template file contains almost all necessary information to run Redis
 # under Graphene / Graphene-SGX. We create redis.manifest (to be run under
@@ -44,6 +45,7 @@ endif
 benchmark_runner.manifest: benchmark_runner.manifest.template
 	sed -e 's|$$(GRAPHENEDIR)|'"$(GRAPHENEDIR)"'|g' \
 		-e 's|$$(GRAPHENEDEBUG)|'"$(GRAPHENEDEBUG)"'|g' \
+		-e 's|$$(ARCH_LIBDIR)|'"$(ARCH_LIBDIR)"'|g' \
 		$< > $@
 
 # Manifest for Graphene-SGX requires special "pal-sgx-sign" procedure. This
@@ -55,12 +57,12 @@ benchmark_runner.manifest: benchmark_runner.manifest.template
 # SGX hardware ABI, in particular EINIT instruction). The "pal-sgx-get-token"
 # script generates these objects and puts them in files .token and .sig
 # respectively. Note that filenames must be the same as the executable/manifest
-# name (i.e., "benchmark_runner").
+# name (i.e., "secure_main").
 
 benchmark_runner.manifest.sgx: benchmark_runner.manifest
 	$(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/pal-sgx-sign \
 		-libpal $(GRAPHENEDIR)/Runtime/libpal-Linux-SGX.so \
-		-key $(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/enclave-key.pem \
+		-key $(SGX_SIGNER_KEY) \
 		-manifest $< -output $@ \
 		-exec benchmark_runner
 	$(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/pal-sgx-get-token \
@@ -79,13 +81,9 @@ pal_loader:
 	ln -s $(GRAPHENEDIR)/Runtime/pal_loader $@
 
 ############################## RUNNING TESTS ##################################
-.PHONY: start-native-server
-start-native-server: all
-	./benchmark_runner --save '' --protected-mode no
-
-.PHONY: start-graphene-server
-start-graphene-server: all
-	./pal_loader benchmark_runner --save '' --protected-mode no
+.PHONY: run
+run: all 
+	SGX=1 ./pal_loader benchmark_runner Q06
 
 ################################## CLEANUP ####################################
 
@@ -95,4 +93,4 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	$(RM) -r $(SRCDIR)
+	$(RM) -r $(SRCDIR) redis.tar.gz

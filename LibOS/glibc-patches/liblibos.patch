@@ -120,8 +120,8 @@ index 0000000..8785629
 +}
 +#endif
 +#ifdef __NR_unsecure_free
-+int unsecure_free (void *ptr)
++void unsecure_free (void *ptr)
 +{
-+	return INLINE_SYSCALL (unsecure_free, 1, ptr);
++	INLINE_SYSCALL (unsecure_free, 1, ptr);
 +}
 +#endif

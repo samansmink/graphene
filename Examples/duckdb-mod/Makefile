@@ -31,10 +31,7 @@ GRAPHENEDEBUG = none
 endif
 
 .PHONY: all
-all: secure_main secure_main.manifest pal_loader
-ifeq ($(SGX),1)
-all: secure_main.manifest.sgx
-endif
+all: secure_main secure_main.manifest pal_loader secure_main.manifest.sgx
 
 include ../../Scripts/Makefile.configs
 
@@ -83,13 +80,9 @@ pal_loader:
 	ln -s $(GRAPHENEDIR)/Runtime/pal_loader $@
 
 ############################## RUNNING TESTS ##################################
-.PHONY: start-native-server
-start-native-server: all
-	./secure_main --save '' --protected-mode no
-
-.PHONY: start-graphene-server
-start-graphene-server: all
-	./pal_loader secure_main --save '' --protected-mode no
+.PHONY: run
+run: all
+	SGX=1 ./pal_loader secure_main
 
 ################################## CLEANUP ####################################
 

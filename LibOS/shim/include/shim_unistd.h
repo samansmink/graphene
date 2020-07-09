@@ -31,7 +31,7 @@ size_t send_rpc(pid_t pid, const void* buf, size_t size);
 size_t recv_rpc(pid_t* pid, void* buf, size_t size);
 
 void* unsecure_malloc(size_t size);
-int unsecure_free(void* size);
+void unsecure_free(void* size);
 
 struct sigcp {
     int si_session;

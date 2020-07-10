@@ -51,8 +51,6 @@ size_t shim_do_recv_rpc(pid_t* pid, void* buf, size_t size) {
 void* shim_do_unsecure_malloc(size_t size) {
     void* ptr = DkUntrustedMalloc(size);
 
-    debug_printf("Unsecure malloc: %ld\n", size);
-
     return ptr;
 }
 

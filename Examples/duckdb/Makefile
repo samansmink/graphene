@@ -32,7 +32,7 @@ GRAPHENEDEBUG = none
 endif
 
 .PHONY: all
-all: benchmark_runner benchmark_runner.manifest pal_loader benchmark_runner.manifest.sgx
+all: benchmark_runner benchmark_runner.manifest sgx_stats pal_loader benchmark_runner.manifest.sgx
 
 include ../../Scripts/Makefile.configs
 
@@ -75,10 +75,13 @@ benchmark_runner.manifest.sgx: benchmark_runner.manifest
 # Also, create a link to pal_loader for simplicity.
 
 benchmark_runner:
-	ln -s /home/sam/Documents/duckdb/build/release/benchmark/benchmark_runner $@
+	ln -s /home/sam/Documents/main-experiment-runner/build/release/benchmark/benchmark_runner $@
 
 pal_loader:
 	ln -s $(GRAPHENEDIR)/Runtime/pal_loader $@
+
+sgx_stats:
+	ln -s /proc/sgx_stats $@
 
 ############################## RUNNING TESTS ##################################
 .PHONY: run

@@ -37,7 +37,7 @@ loader.insecure__use_cmdline_argv = 1
 # In case of Redis:
 # - /lib is searched for Glibc libraries (ld, libc, libpthread)
 # - $(ARCH_LIBDIR) is searched for Name Service Switch (NSS) libraries
-loader.env.LD_LIBRARY_PATH = /lib:$(ARCH_LIBDIR):/lib/x86_64-linux-gnu:/usr/lib:/usr/lib/x86_64-linux-gnu:/home/sam/Documents/duckdb/build/release/src/
+loader.env.LD_LIBRARY_PATH = /lib:$(ARCH_LIBDIR):/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/home/sam/Documents/duckdb/build/release/src/
 
 ################################# MOUNT FS  ###################################
 
@@ -154,3 +154,4 @@ sgx.allowed_files.duckdb_tpch_part = file:duckdb_benchmark_data/tpch_part.csv
 sgx.allowed_files.duckdb_tpch_partsupp = file:duckdb_benchmark_data/tpch_partsupp.csv
 sgx.allowed_files.duckdb_tpch_region = file:duckdb_benchmark_data/tpch_region.csv
 sgx.allowed_files.duckdb_tpch_supplier = file:duckdb_benchmark_data/tpch_supplier.csv
+sgx.allowed_files.sgx_stats = file:sgx_stats
